@@ -52,6 +52,7 @@ module.exports = function timeout(time, options) {
     req.socket.destroy = function(){
       clearTimeout(id);
       destroy.call(this);
+      req = res = next = destroy = id = null;
     };
 
     req.timedout = false;
