@@ -23,7 +23,7 @@ var onHeaders = require('on-headers');
  * @param {Object} options
  * @return {Function} middleware
  * @api public
- */
+   */
 
 module.exports = function timeout(time, options) {
   options = options || {};
