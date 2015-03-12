@@ -39,6 +39,7 @@ module.exports = function timeout(time, options) {
     var id = setTimeout(function(){
       req.timedout = true;
       req.emit('timeout', time);
+      req = res = next = null;
     }, time);
 
     if (respond) {
@@ -47,18 +48,21 @@ module.exports = function timeout(time, options) {
 
     req.clearTimeout = function(){
       clearTimeout(id);
+      id = null;
     };
 
     req.socket.destroy = function(){
       clearTimeout(id);
       destroy.call(this);
-      req = res = next = destroy = id = null;
+      next = destroy = id = req = res = null;
     };
 
     req.timedout = false;
 
     onHeaders(res, function(){
       clearTimeout(id);
+      id = null;
+      req = res = next = null;
     });
 
     next();
@@ -71,5 +75,7 @@ function onTimeout(time, cb){
       code: 'ETIMEDOUT',
       timeout: time
     }));
+    
+    time = cb = null;
   };
 }
